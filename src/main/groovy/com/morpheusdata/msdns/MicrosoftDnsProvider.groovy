@@ -234,6 +234,7 @@ class MicrosoftDnsProvider implements DNSProvider {
             Map integrationConfig = integration.getConfigMap()
             // Are we using Agent or winRm for transport
             String rpcTransport = (integrationConfig?.agentRpc && integrationConfig?.agentRpc == "on") ? "agent" : "winrm"
+            Boolean importZoneRecords = (integrationConfig?.inventoryExisting && integrationConfig?.inventoryExisting == "on")
             ServiceResponse rpcTest = testRpcConnection(integration)
             log.info("refresh - integration ${integration.name} - checking the integration is online - ${integration.serviceUrl} - ${rpcTest.success}")
             if(rpcTest.success) {
@@ -252,11 +253,11 @@ class MicrosoftDnsProvider implements DNSProvider {
                     //getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.ok).subscribe().dispose()
                 } else {
                     log.warn("refresh - integration: ${integration.name} - Cannot access DNS Services via integration. Error : ${testDns}")
-                    getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} failed Service Tests")
+                    getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} failed Service Tests")
                 }
             } else {
                 log.warn("refresh - integration: ${integration.name} - Integration appears to be offline")
-                getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} ${integration.serviceUrl} is unreachable")
+                getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} ${integration.serviceUrl} is unreachable")
             }                       
         } catch(e) {
             log.error("refresh - integration: ${integration.name} - Exception raised refreshing integration ${e.getMessage()}")
