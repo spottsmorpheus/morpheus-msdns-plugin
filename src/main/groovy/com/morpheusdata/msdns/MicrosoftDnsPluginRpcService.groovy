@@ -3,8 +3,6 @@ package com.morpheusdata.msdns
 import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.model.AccountIntegration
 import com.morpheusdata.model.TaskResult
-import com.morpheusdata.model.ComputeServer
-import com.morpheusdata.core.data.*
 import com.morpheusdata.response.ServiceResponse
 
 import groovy.json.JsonSlurper
@@ -53,38 +51,7 @@ class MicrosoftDnsPluginRpcService {
         if (rpcTransport == "agent") {
             //TODO locate server record for rpcServer - need it for the agent
             log.info("executeCommand - Using Morpheus Agent as rpc Transport")
-            //Ensure we get the non-qualified rpcHost
-            ComputeServer server
-            try {
-                rpcHost = integration.serviceUrl.tokenize(".").first()
-                server = getMorpheus().getAsync().getComputeServer().find(
-                    new DataQuery().withFilters(
-                        new DataAndFilter(
-                                new DataOrFilter(
-                                        new DataFilter("hostname","==",integration.serviceUrl),
-                                        new DataFilter("hostname","==",rpcHost)
-                                ),
-                                new DataFilter("agentInstalled","==",true)
-                        ))).blockingGet()
-            }
-            catch (e) {
-                log.error("executeCommand - Error locating ComputeServer for Agent rpc transport ${rpcHost} - Exception ${e.getMessage()}")
-                return ServiceResponse.error("Agent RPC Process - failed to locate ComputeServer with Agent installed.")
-            }
-            if (server) {
-                log.info("executeCommand - located ComputeServer with hostname ${server?.hostname} - apiKey ${server?.apiKey} - Agent Version ${server.agentVersion}")
-                try {
-                    rpcResult = getMorpheus().executeCommandOnServer(server,command,false,null,null,null,null,null,true,false,false).blockingGet()
-                    log.debug("executeCommand - rpcType:agent - Results -  ${rpcResult.dump()}")
-                }
-                catch (e) {
-                    log.error("executeCommand - Agent rpc process raised exception ${e.getMessage()}")
-                    return ServiceResponse.error("Agent RPC Process failed to connect - check Server in Morpheus")
-                }
-            } else {
-                log.warn("executeCommand - Error locating ComputeServer for Agent rpc transport ${rpcHost}")
-                return ServiceResponse.error("Agent RPC Process - failed to locate ComputeServer with Agent installed - ${rpcHost}")
-            }
+            return ServiceResponse.error("The Morpheus Agent is not supported as an RpcTransport in this version")
         } else {
             log.info("executeCommand - Using winrm as rpc Transport")
             try {

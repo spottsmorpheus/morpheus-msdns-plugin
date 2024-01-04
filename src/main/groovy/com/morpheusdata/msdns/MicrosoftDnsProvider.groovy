@@ -64,8 +64,8 @@ class MicrosoftDnsProvider implements DNSProvider {
     */
     ServiceResponse getIntegrationServiceProfile(Long integrationId) {
         try {
-            //AccountIntegration integration = morpheusContext.getAccountIntegration().get(integrationId).blockingGet()
-            AccountIntegration integration = getMorpheus().getAsync().getAccountIntegration().get(integrationId).blockingGet()
+            AccountIntegration integration = morpheusContext.getAccountIntegration().get(integrationId).blockingGet()
+            //AccountIntegration integration = getMorpheus().getAsync().getAccountIntegration().get(integrationId).blockingGet()
             if (integration?.type == "microsoft.dns") {
                 log.info("getIntegrationServiceProfile - Getting Service Profile for ${integration.name}")
                 if (!integration?.credentialLoaded) {
@@ -249,15 +249,15 @@ class MicrosoftDnsProvider implements DNSProvider {
                         log.info("refresh - integration: ${integration.name} - This integration will not import existing DNS Resource Records")
                     }
                     log.info("refresh - integration: ${integration.name} - Sync Completed in ${new Date().time - now.time}ms")
-                    getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.ok).subscribe().dispose()
-                    //getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.ok).subscribe().dispose()
+                    //getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.ok).subscribe().dispose()
+                    getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.ok).subscribe().dispose()
                 } else {
                     log.warn("refresh - integration: ${integration.name} - Cannot access DNS Services via integration. Error : ${testDns}")
-                    getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} failed Service Tests")
+                    getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} failed Service Tests")
                 }
             } else {
                 log.warn("refresh - integration: ${integration.name} - Integration appears to be offline")
-                getMorpheus().getAsync().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} ${integration.serviceUrl} is unreachable")
+                getMorpheus().getIntegration().updateAccountIntegrationStatus(integration, AccountIntegration.Status.error, "Microsoft DNS integration ${integration.name} ${integration.serviceUrl} is unreachable")
             }                       
         } catch(e) {
             log.error("refresh - integration: ${integration.name} - Exception raised refreshing integration ${e.getMessage()}")
@@ -427,8 +427,8 @@ class MicrosoftDnsProvider implements DNSProvider {
             log.debug("Adding Zone: ${networkDomain}")
             return networkDomain
         }
-        getMorpheus().getAsync().getNetwork().getDomain().create(integration.id,missingZonesList).blockingGet()
-        // deprecated morpheus.network.domain.create(integration.id, missingZonesList).blockingGet()
+        //getMorpheus().getAsync().getNetwork().getDomain().create(integration.id,missingZonesList).blockingGet()
+        morpheus.network.domain.create(integration.id, missingZonesList).blockingGet()
     }
 
     /**
@@ -462,8 +462,8 @@ class MicrosoftDnsProvider implements DNSProvider {
             }
         }
         if(domainsToUpdate.size() > 0) {
-            getMorpheus().getAsync().getNetwork().getDomain().bulkSave(domainsToUpdate).blockingGet()
-            // morpheus.network.domain.save(domainsToUpdate).blockingGet()
+            //getMorpheus().getAsync().getNetwork().getDomain().bulkSave(domainsToUpdate).blockingGet()
+            morpheus.network.domain.save(domainsToUpdate).blockingGet()
         }
     }
 
@@ -481,7 +481,7 @@ class MicrosoftDnsProvider implements DNSProvider {
                 List<Map> apiItems = listResults.getData() as List<Map>
                 //Unfortunately the unique identification matching for msdns requires the full record for now... so we have to load all records...this should be fixed
                 Observable<NetworkDomainRecord> domainRecords = getMorpheus().getNetwork().getDomain().getRecord().listIdentityProjections(domain,null).buffer(50).flatMap {domainIdentities ->
-                    getMorpheus().getAsync().getNetwork().getDomain().getRecord().listById(domainIdentities.collect{it.id})
+                    getMorpheus().getNetwork().getDomain().getRecord().listById(domainIdentities.collect{it.id})
                 }
                 SyncTask<NetworkDomainRecord, Map, NetworkDomainRecord> syncTask = new SyncTask<NetworkDomainRecord, Map, NetworkDomainRecord>(domainRecords, apiItems)
                 return syncTask.addMatchFunction {  NetworkDomainRecord domainObject, Map apiItem ->
@@ -495,7 +495,7 @@ class MicrosoftDnsProvider implements DNSProvider {
                     addMissingDomainRecords(domain, itemsToAdd)
                 }.withLoadObjectDetails { List<SyncTask.UpdateItemDto<NetworkDomainRecord,Map>> updateItems ->
                     Map<Long, SyncTask.UpdateItemDto<NetworkDomainRecord, Map>> updateItemMap = updateItems.collectEntries { [(it.existingItem.id): it]}
-                    return getMorpheus().getAsync().getNetwork().getDomain().getRecord().listById(updateItems.collect{it.existingItem.id} as Collection<Long>).map { NetworkDomainRecord domainRecord ->
+                    return getMorpheus().getNetwork().getDomain().getRecord().listById(updateItems.collect{it.existingItem.id} as Collection<Long>).map { NetworkDomainRecord domainRecord ->
                         SyncTask.UpdateItemDto<NetworkDomainRecordIdentityProjection, Map> matchItem = updateItemMap[domainRecord.id]
                         return new SyncTask.UpdateItem<NetworkDomainRecord,Map>(existingItem:domainRecord, masterItem:matchItem.masterItem)
                     }
@@ -539,7 +539,7 @@ class MicrosoftDnsProvider implements DNSProvider {
             }
         }
         if(records.size() > 0) {
-            getMorpheus().getAsync().getNetwork().getDomain().getRecord().bulkSave(records).blockingGet()
+            getMorpheus().getNetwork().getDomain().getRecord().bulkSave(records).blockingGet()
         }
     }
 
@@ -562,7 +562,7 @@ class MicrosoftDnsProvider implements DNSProvider {
 
         }
         //deprecated orpheus.network.domain.record.create(domain,records).blockingGet()
-        getMorpheus().getAsync().getNetwork().getDomain().getRecord().create(domain,records).blockingGet()
+        getMorpheus().getNetwork().getDomain().getRecord().create(domain,records).blockingGet()
     }
 
     /**
