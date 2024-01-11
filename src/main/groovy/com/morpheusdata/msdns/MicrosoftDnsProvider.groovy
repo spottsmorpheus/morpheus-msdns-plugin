@@ -1160,8 +1160,6 @@ class MicrosoftDnsProvider implements DNSProvider {
             lockId = morpheusContext.acquireLock(lockName, [ttl: 120000L, timeout: 60000L]).blockingGet()
             log.info("testDnsService - integration: ${integration.name} - Acquired lock: ${lockName}, value: ${lockId}")
             testHelper = verifyMorpheusDnsPluginPowershell(integration)
-            log.info("TESTING ${testHelper.dump()}")
-
         }
         catch (e) {
             log.error("testDnsService - integration: ${integration.name} - Unable to verify DNS Helper Script - Possibly locked by another integration.")
