@@ -1,12 +1,14 @@
 # Microsoft DNS Morpheus Plugin
 
-## Version 3.3
+## Version 3.4
 
+Version 3.4.x is built to support Morpheus version 7.0 LTS Release
 Version 3.3.x is built to support Morpheus version 6.3 Standard Release
 Version 3.2.x is built to support Morpheus version 6.2 LTS Release
 
 Each Plugin version will specify the Minimum supported Morpheus version and Plugin API version.
 
+### Plugin version 3.4.0 supports minimum Morpheus version 7.0.1 with plugin API 1.1.0
 ### Plugin version 3.3.0 supports minimum Morpheus version 6.3.4 with plugin API 1.0.6
 ### Plugin version 3.2.0 supports minimum Morpheus version 6.2.7 with plugin API 0.15.10
 

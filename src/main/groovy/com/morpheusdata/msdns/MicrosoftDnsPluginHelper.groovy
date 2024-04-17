@@ -39,7 +39,7 @@ class MicrosoftDnsPluginHelper {
     * The file name should match the plugin version
     */
     public static String getHelperFile() {
-        return "morpheusDnsPluginHelper_v33.ps1"
+        return "morpheusDnsPluginHelper_v34.ps1"
     }
 
     /*
