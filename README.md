@@ -1,21 +1,16 @@
 # Microsoft DNS Morpheus Plugin
 
-## Version 3.4
-
-Version 3.4.x is built to support Morpheus version 7.0 LTS Release
-Version 3.3.x is built to support Morpheus version 6.3 Standard Release
-Version 3.2.x is built to support Morpheus version 6.2 LTS Release
+## Version 2.3.3
 
 Each Plugin version will specify the Minimum supported Morpheus version and Plugin API version.
 
-### Plugin version 3.4.0 supports minimum Morpheus version 7.0.1 with plugin API 1.1.0
-### Plugin version 3.3.0 supports minimum Morpheus version 6.3.4 with plugin API 1.0.6
-### Plugin version 3.2.0 supports minimum Morpheus version 6.2.7 with plugin API 0.15.10
+### Plugin version 2.3.3 supports minimum Morpheus version 7.0.1 with plugin API 1.1.0
+### Plugin version 2.1.3 supports minimum Morpheus version 6.2.7 with plugin API 0.15.10
 
 ## Introduction
 This is the official Morpheus plugin for interacting with Microsoft DNS. This automates functions as it relates to automatically creating DNS Records and cleaning up DNS records both during workload provisioning and manually. It should be noted that if joining a Windows VM to an Active Directory Domain, this integration is not needed as the Domain joining typically auto creates a DNS record. This was originally embedded into Morpheus and is being extracted for easier maintenance.
 
-## New with v3
+## Recent Changes
 
 ### Plugin Integration Controls
 
@@ -57,11 +52,11 @@ would
 
 ### Improved Integration Validation
 
-This plugin includes improvements in error handling and validation. Connectivity and access to DNS Services is tested at the time the integration dialog is saved. The Dialog will not save unless validation is passed successfully. The integration dialog will hint where problems occur but you should check the Morpheus Health logs to see detailed messages. To force the integration to save you can uncheck the ENABLED checkbox. Doing this disables the validation testing allowing you to save the integration dialog contents allowing you to revisit the dialog once any issues have been resolved.
+This plugin includes improvements in error handling and validation. Connectivity and access to DNS Services is tested at the time the integration dialog is saved. The Dialog will not save unless validation is passed successfully. The integration dialog will hint where problems occur, but you should check the Morpheus Health logs to see detailed messages. To force the integration to save you can uncheck the ENABLED checkbox. Doing this disables the validation testing allowing you to save the integration dialog contents allowing you to revisit the dialog once any issues have been resolved.
 
 #### Troubleshooting Connections
 
-A new feature of v3 is the ability to run a connection test via the Morpheus Applicance. Users must have full access to Integrations permission to test a Microsoft DNS plugin connection. To test connectivity to Integration with id 5 browse to the following url in Morpheus
+A new feature of v3 is the ability to run a connection test via the Morpheus Appliance. Users must have full access to Integrations permission to test a Microsoft DNS plugin connection. To test connectivity to Integration with id 5 browse to the following url in Morpheus
 
 https://my.morpheus.appliance/plugin/msdns/service?integrationId=5
 
@@ -195,7 +190,7 @@ To use an intermediate server:
 - enter the fqdn of the intermediate server as the RPC SERVER
 - Select/Deselect USE AGENT FOR RPC. If de-selected the RPC transport is WinRM
 - enter the fqdn of the Dns Server as DNS SERVER
-- Select a SERVICE TYPE from the select list (see descripotion below)
+- Select a SERVICE TYPE from the select list (see description below)
 
 
 #### Morpheus Agent as RPC Transport
