@@ -52,7 +52,7 @@ class MicrosoftDnsPluginRpcService {
 
         if (rpcTransport == "agent") {
             //TODO locate server record for rpcServer - need it for the agent
-            log.info("executeCommand - Using Morpheus Agent as rpc Transport")
+            log.debug("executeCommand - Using Morpheus Agent as rpc Transport")
             //Ensure we get the non-qualified rpcHost
             ComputeServer server
             try {
@@ -72,7 +72,7 @@ class MicrosoftDnsPluginRpcService {
                 return ServiceResponse.error("Agent RPC Process - failed to locate ComputeServer with Agent installed.")
             }
             if (server) {
-                log.info("executeCommand - located ComputeServer with hostname ${server?.hostname} - apiKey ${server?.apiKey} - Agent Version ${server.agentVersion}")
+                log.debug("executeCommand - located ComputeServer with hostname ${server?.hostname} - apiKey ${server?.apiKey} - Agent Version ${server.agentVersion}")
                 try {
                     rpcResult = getMorpheus().executeCommandOnServer(server,command,false,null,null,null,null,null,true,false,false).blockingGet()
                     log.debug("executeCommand - rpcType:agent - Results -  ${rpcResult.dump()}")
@@ -86,7 +86,7 @@ class MicrosoftDnsPluginRpcService {
                 return ServiceResponse.error("Agent RPC Process - failed to locate ComputeServer with Agent installed - ${rpcHost}")
             }
         } else {
-            log.info("executeCommand - Using winrm as rpc Transport")
+            log.debug("executeCommand - Using winrm as rpc Transport")
             try {
                 rpcResult = getMorpheus().executeWindowsCommand(rpcHost, rpcPort, username, password, command, true, false).blockingGet()
                 log.debug("executeCommand - rpcType:winrm - Results -  ${rpcResult.dump()}")
@@ -109,7 +109,7 @@ class MicrosoftDnsPluginRpcService {
                     if (rpcData.status > 0) {
                         log.warn("executeCommand - Masking error from DNS - ${rpcHost} via ${rpcTransport}. Status: ${rpcData.status} : ${getErrorMsg(rpcData.status)}")
                     } else {
-                        log.info("executeCommand - ${rpcHost} via ${rpcTransport}: ${getErrorMsg(rpcData.status)}")
+                        log.debug("executeCommand - ${rpcHost} via ${rpcTransport}: ${getErrorMsg(rpcData.status)}")
                     }
                 } else {
                     log.warn("executeCommand - rpc completed ok but response indicates a failure status ${rpcData}")

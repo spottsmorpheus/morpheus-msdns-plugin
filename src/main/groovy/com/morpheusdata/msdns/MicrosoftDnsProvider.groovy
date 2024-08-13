@@ -231,11 +231,13 @@ class MicrosoftDnsProvider implements DNSProvider {
     void refresh(AccountIntegration integration) {
         try {
             Map integrationConfig = integration.getConfigMap()
+            log.info("refresh - integration: ${integration.name} - config: ${integrationConfig}")
             // Are we using Agent or winRm for transport
             String rpcTransport = (integrationConfig?.agentRpc && integrationConfig?.agentRpc == "on") ? "agent" : "winrm"
             Boolean importZoneRecords = (integrationConfig?.inventoryExisting && integrationConfig?.inventoryExisting == "on")
             ServiceResponse rpcTest = testRpcConnection(integration)
             log.info("refresh - integration ${integration.name} - checking the integration is online - ${integration.serviceUrl} - ${rpcTest.success}")
+            log.debug("refresh - integration: ${integration.name} - integration properties ${integration.getProperties()}")
             if(rpcTest.success) {
                 ServiceResponse testDns = testDnsService(integration)
                 if (testDns.success) {

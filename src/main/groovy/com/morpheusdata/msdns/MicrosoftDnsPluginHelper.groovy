@@ -81,7 +81,7 @@ class MicrosoftDnsPluginHelper {
     /*
     * Powershell Snippet to test the Rpc Connection
     */
-    public static testRpcConnection() {
+    public static String testRpcConnection() {
         String rpcTest = '''
             $rtn = [PSCustomObject]@{status=0;errOut=$Null;cmdOut=$Null}
             $winId = [System.Security.Principal.WindowsIdentity]::GetCurrent()
